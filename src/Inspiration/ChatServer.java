@@ -1,4 +1,4 @@
-package Chat;
+package Inspiration;
 
 import java.io.IOException;
 import java.io.PrintWriter;

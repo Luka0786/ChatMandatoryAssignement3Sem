@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class TCPEchoClient {
     private static InetAddress host;
     private static final int PORT = 1237;
+    private static int incrementingPort = 1237;
 
     public static void main(String[] args) {
 
@@ -29,7 +30,7 @@ public class TCPEchoClient {
         Socket socket = null;
 
         try {
-            socket = new Socket(host,PORT);
+            socket = new Socket(host,incrementingPort);
 
             Scanner input =
                     new Scanner(socket.getInputStream());
@@ -42,12 +43,17 @@ public class TCPEchoClient {
 
             String message, response;
 
+            incrementingPort++;
+
             do {
                 System.out.println("Enter message: ");
                 message = userEntry.nextLine();
                 output.println(message);
                 response = input.nextLine();
                 System.out.println("\nSERVER> " + response);
+                input.nextLine();
+
+
             }while (!message.equals("QUIT"));
 
         }catch (IOException ioE){

@@ -12,9 +12,11 @@ public class TCPEchoServer {
     private static int counter = 0;
     private static ServerSocket serverSocket;
     private static final int PORT = 1237;
+    private static String[] clientNames = new String[5];
 
     public static void main(String[] args) throws IOException {
         System.out.println("Opening port");
+        PrintWriter output;
         try {
             serverSocket = new ServerSocket(PORT);
             // Socket client = serverSocket.accept();
@@ -25,6 +27,13 @@ public class TCPEchoServer {
             System.out.println(clientSocketArray[counter]);
 
             System.out.println("New client accepted!");
+            Scanner socketNameScanner = new Scanner(clientSocketArray[counter].getInputStream());
+            String socketName = socketNameScanner.nextLine();
+            clientNames[counter] = socketName;
+
+
+            output = new PrintWriter(clientSocketArray[counter].getOutputStream(),true);
+            output.println("J_OK");
 
             HandleClient handler = new HandleClient(clientSocketArray[counter]);
 
@@ -33,8 +42,9 @@ public class TCPEchoServer {
 
             handler.start();}
 
-        } catch (IOException ioE) {
-            System.out.println("Error: " + ioE);
+        } catch (Exception e) {
+            output = new PrintWriter(clientSocketArray[counter].getOutputStream(),true);
+            output.println("J_ER: CODE:" + e.getCause() + " Message: " + e.getMessage());
             System.exit(1);
 
         }
@@ -64,12 +74,14 @@ public class TCPEchoServer {
 
 
         public void sendAll(String message) {
+
             for (Socket s : clientSocketArray) {
                 if(s != null){
                     System.out.println(s);
                 try {
                     outputClient = new PrintWriter(s.getOutputStream(),true);
                     outputClient.println(message);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -79,11 +91,19 @@ public class TCPEchoServer {
 
             public void run() {
                 String message;
+                String tempName = "";
 
                 do {
                     message = inputClient.nextLine();
 
-                    sendAll(message);
+                    for (int i = 0; i < clientSocketArray.length ; i++) {
+                        if(client == clientSocketArray[i]){
+                            tempName = clientNames[i];
+                        }
+                    }
+
+
+                    sendAll(tempName + ": " + message);
                     /*
                     for (Socket s : clientSocketArray) {
                         if(s != null) {

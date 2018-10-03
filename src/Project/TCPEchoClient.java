@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 
 public class TCPEchoClient {
+    // Attributes
     private static InetAddress host;
     private static int PORT = 0; //1237
     private static Scanner scanner = new Scanner(System.in);
@@ -20,99 +21,154 @@ public class TCPEchoClient {
     public static void main(String[] args) {
 
         try{
+            // Method call
             connectToServer();
+            // Setting the InetAddress
             host = InetAddress.getByName(hostName);
 
 
         }catch (UnknownHostException uhE) {
+            // Printing the error message
             System.out.println("Client not accepted." + uhE.getMessage());
+
+            // Closing the system after error occurs
             System.exit(1);
         }
+        // Method call
         accessServer();
 
     }
 
+    // Method that makes the client access the server
     private static void accessServer() {
+        // Initializing new socket
         Socket socket = null;
 
         try {
+            // The socket equals the InetAdress and Port number
             socket = new Socket(host,PORT);
 
+            // Initializing a BufferedReader, that takes the sockets InputStream as a parameter
             BufferedReader input =
                     new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+            // Initializing a PrintWriter, that takes the sockets OutputStream as a parameter
             PrintWriter output =
                     new PrintWriter(
                             socket.getOutputStream(),true);
 
+            // Initializing a BufferedReader, that reads the clients input
             BufferedReader userEntry = new BufferedReader(new InputStreamReader(System.in));
 
+            // Sending the clients name to the sockets OutputStream
             output.println(name);
-            String message = "", response;
-            boolean isRunning = true;
+
+
+
+
+
+            // Declaring two Strings
+            String response;
+
+
 
 
             do {
-                System.out.println("Enter message: ");
 
+
+
+
+                // Thread that reads the message written by the client
                 Thread readMessage = new Thread(new Runnable() {
+
                     @Override
                     public void run() {
+
                         while (true){
                             try {
-                                String message = userEntry.readLine();;
+
+                                // The clients input
+                                System.out.println("Enter message: ");
+
+                               String message = userEntry.readLine();
+
+
+                               while(message.length() > 250){
+                                   System.out.println("Messages can only be 250 characters");
+
+                                   message = userEntry.readLine();
+                               }
+                                // Sending the input to the sockets OutputStream
                                 output.println(message);
+
+
+
+                                // If the client type QUIT the system closes
                                 if (message.equals("QUIT")) {
                                     System.exit(1);
                                 }
-                            } catch (IOException e) {
+
+
+                            }
+                            // Catching the IOExeption and printing the error code
+                            catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
                 });
+                // Starting the Thread
                 readMessage.start();
 
+                // Setting the response equals the sockets InputStreams readLine method
                 response = input.readLine();
 
+                // Printing out the response (J_OK)
                 System.out.println(response);
 
+            }
 
-
-            }while (isRunning);
-
-
-        }catch (IOException ioE){
-            ioE.printStackTrace();
+            // Infinite loop
+            while (true);
         }
-        finally {
-            try{
-                System.out.println(
-                        "\n* Closing connection ");
-                socket.close();
-            }
-            catch (IOException ioE){
-                System.out.println("Unable to disconnect!");
-                System.exit(1);
-            }
+        // Catching the IOExeption and printing the error code
+        catch (IOException ioE){
+            ioE.printStackTrace();
         }
     }
 
+    // Method that connects the client to the server, if the InetAdress and port matches the server
     private static void connectToServer() {
+        // Welcome message
         System.out.println("Welcome to the chat. To enter the chat room, please type:\n" +
                 "JOIN user_name, server_ip:server_port");
 
-        System.out.println("EXAMPLE: JOIN Lukas, localhost:1237");
+        // Giving an example
+        System.out.println("EXAMPLE: JOIN Lukas, localhost:9000");
 
-
+        // The clients input to join the server
         String join = scanner.nextLine();
-        System.out.println(join);
+
+        // Splits the clients input into a String array, and splitting by (space, comma and colon)
         String[] parts = join.split("[\\s,:]+", 200);
+
+        // The name is equal the first index of the String array
         name = parts[1];
+
+        while (name.length() > 12 || !name.matches("[a-åA-Å0-9_-]+")){
+            System.out.println("Invalid name. Can only contain 12 characters, numbers and the signs _ and -");
+            System.out.println("Please try again: ");
+            Scanner temp = new Scanner(System.in);
+
+            name = temp.nextLine();
+        }
+
+
+
+        // The InetAdress is equal the second index of the String array
         hostName = parts[2];
+
+        // The Port number is equal the third index of the String array, and parsed to an integer, since the input is a String
         PORT = Integer.parseInt(parts[3]);
-
-
-
     }
 }

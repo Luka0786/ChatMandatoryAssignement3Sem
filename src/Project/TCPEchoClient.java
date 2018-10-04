@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -18,16 +20,17 @@ public class TCPEchoClient {
     private static String name;
     private static String hostName;
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
 
         try{
             // Method call
+
             connectToServer();
             // Setting the InetAddress
             host = InetAddress.getByName(hostName);
 
 
-        }catch (UnknownHostException uhE) {
+        }catch (IOException uhE) {
             // Printing the error message
             System.out.println("Client not accepted." + uhE.getMessage());
 
@@ -59,6 +62,24 @@ public class TCPEchoClient {
 
             // Initializing a BufferedReader, that reads the clients input
             BufferedReader userEntry = new BufferedReader(new InputStreamReader(System.in));
+
+            String names = input.readLine();
+            String[] tempArray = names.split("[\\s]");
+
+
+            List<String> tempNames = new ArrayList(Arrays.asList(tempArray));
+
+            for (int i = 0; i < tempNames.size(); i++) {
+                System.out.println(tempArray[i]);
+            }
+
+            while (tempNames.contains(name)){
+                System.out.println("Duplicate name please try again: ");
+                Scanner scanner = new Scanner(System.in);
+
+               name = scanner.nextLine();
+            }
+
 
             // Sending the clients name to the sockets OutputStream
             output.println(name);
@@ -171,4 +192,5 @@ public class TCPEchoClient {
         // The Port number is equal the third index of the String array, and parsed to an integer, since the input is a String
         PORT = Integer.parseInt(parts[3]);
     }
+
 }

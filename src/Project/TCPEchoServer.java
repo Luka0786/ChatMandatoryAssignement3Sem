@@ -17,6 +17,7 @@ public class TCPEchoServer {
     private static final int PORT = 9000;
     private static String[] clientNames = new String[5];
 
+
     public static void main(String[] args) throws IOException {
         // Declaring printwriter
         System.out.println("Opening port");
@@ -33,11 +34,22 @@ public class TCPEchoServer {
                 // Printing to the server that a new client has been accepted
                 System.out.println("New client accepted!");
 
+
                 // Initializing a Scanner which takes the socket in clientsockerArray at index of counter and get the inputStream of that specific socket
                 Scanner socketNameScanner = new Scanner(clientSocketArray[counter].getInputStream());
 
                 // We then initialize a printwriter which takes the currently created socket, and send a J_OK message back to the client if the connection is successful
                 output = new PrintWriter(clientSocketArray[counter].getOutputStream(),true);
+
+               String names = "";
+
+                for (int i = 0; i < clientNames.length ; i++) {
+                    if(clientNames[i] != null){
+                    names += clientNames[i] + " ";}
+                }
+
+                System.out.println(names);
+                output.println(names);
                 output.println("J_OK");
 
                 // Getting the socket name from the Client, in the client after connecting we send the name using the output variable.
@@ -160,6 +172,7 @@ public class TCPEchoServer {
             }
         }
     }
+
 
 }
 

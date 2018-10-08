@@ -1,15 +1,15 @@
 package Project;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 public class TCPEchoClient {
@@ -48,6 +48,7 @@ public class TCPEchoClient {
         Socket socket = null;
 
         try {
+
             // The socket equals the InetAdress and Port number
             socket = new Socket(host,PORT);
 
@@ -59,6 +60,7 @@ public class TCPEchoClient {
             PrintWriter output =
                     new PrintWriter(
                             socket.getOutputStream(),true);
+
 
             // Initializing a BufferedReader, that reads the clients input
             BufferedReader userEntry = new BufferedReader(new InputStreamReader(System.in));
@@ -80,25 +82,32 @@ public class TCPEchoClient {
                name = scanner.nextLine();
             }
 
-
             // Sending the clients name to the sockets OutputStream
             output.println(name);
 
-
-
-
+            // IMAV Thread
+            // LAV DENNE OM TIL NORMAL METODE. IKKE BEHOV FOR EN SLEEPER MERE. VI DELAYER DEN MED VORES IF STATEMENT (DOTIME) og (LOCALTIME).
+            // HVER CLIENT HAR EN HVER
+            Thread IMAV = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            String IMAVmessage = "***IMAV***";
+                            output.println(IMAVmessage);
+                            Thread.sleep(5000);
+                        } catch (InterruptedException ieE) {
+                            ieE.printStackTrace();
+                        }
+                    }
+                }
+            });
+            IMAV.start();
 
             // Declaring two Strings
             String response;
 
-
-
-
             do {
-
-
-
-
                 // Thread that reads the message written by the client
                 Thread readMessage = new Thread(new Runnable() {
 
@@ -107,11 +116,10 @@ public class TCPEchoClient {
 
                         while (true){
                             try {
-
                                 // The clients input
                                 System.out.println("Enter message: ");
 
-                               String message = userEntry.readLine();
+                                String message = userEntry.readLine();
 
 
                                while(message.length() > 250){
@@ -121,6 +129,7 @@ public class TCPEchoClient {
                                }
                                 // Sending the input to the sockets OutputStream
                                 output.println(message);
+
 
 
 
@@ -140,6 +149,7 @@ public class TCPEchoClient {
                 });
                 // Starting the Thread
                 readMessage.start();
+
 
                 // Setting the response equals the sockets InputStreams readLine method
                 response = input.readLine();
@@ -192,5 +202,6 @@ public class TCPEchoClient {
         // The Port number is equal the third index of the String array, and parsed to an integer, since the input is a String
         PORT = Integer.parseInt(parts[3]);
     }
-
 }
+
+

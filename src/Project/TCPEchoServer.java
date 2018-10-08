@@ -1,13 +1,15 @@
 package Project;
 
+import com.sun.deploy.util.ArrayUtil;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import org.omg.CORBA.TIMEOUT;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+import java.util.Arrays;
 
 public class TCPEchoServer {
     //Variables
@@ -22,6 +24,7 @@ public class TCPEchoServer {
         // Declaring printwriter
         System.out.println("Opening port");
         PrintWriter output;
+
         try {
             // Initializing a new serversocket which takes PORT as a parameter
             serverSocket = new ServerSocket(PORT);
@@ -41,7 +44,7 @@ public class TCPEchoServer {
                 // We then initialize a printwriter which takes the currently created socket, and send a J_OK message back to the client if the connection is successful
                 output = new PrintWriter(clientSocketArray[counter].getOutputStream(),true);
 
-               String names = "";
+                String names = "";
 
                 for (int i = 0; i < clientNames.length ; i++) {
                     if(clientNames[i] != null){
@@ -54,6 +57,8 @@ public class TCPEchoServer {
 
                 // Getting the socket name from the Client, in the client after connecting we send the name using the output variable.
                 String socketName = socketNameScanner.nextLine();
+
+
 
                 // We then add the name to an array we defined which contains only the names for that specific socket, so it is added in the same order as the sockets
                 // This means if we have index 7 in clientSocketArray we also have the name that was added when creating this socket in the client
@@ -69,12 +74,8 @@ public class TCPEchoServer {
 
                     if (clientNames[i] != null) {
                         tempListOfNames.add(clientNames[i]);
-
-
                     }
-
                 }
-
 
                 handler.sendAll("LIST " + tempListOfNames.toString()
                         .replace(",", "")
@@ -87,7 +88,15 @@ public class TCPEchoServer {
                 counter++;
 
                 // Starting the thread that we initialized above
-                handler.start();}
+                handler.start();
+
+                // LUKAS>: Fanger LMAO som bliver sendt fra clienten
+                //String test = socketNameScanner.nextLine();
+                // TESTE SÅDAN HER, HVIS DER KOMMER ET HEARTBEAT FRA CLIENTEN SÅ IKKE NOGET. ELLERS SLET HAM FRA LISTEN
+                //System.out.println(test);
+
+
+            }
 
         }
         // A catch clause that will print to the client if connection fails and exit the process
@@ -105,6 +114,7 @@ public class TCPEchoServer {
         private Socket client;
         private Scanner inputClient;
         private PrintWriter outputClient;
+
 
         // Constructor which takes a socket as a parameter and initializews a new Scanner object which takes our sockets inputstream as a parameter
         public HandleClient(Socket socket) {
@@ -138,42 +148,72 @@ public class TCPEchoServer {
             }
         }
         // HandleClients run method
-        public void run() {
+        public void run() throws NoSuchElementException {
             // Variables
             String message;
             String tempName = "";
-
-            do {
-                // Initializing message as inputClient.nextline();
-                message = inputClient.nextLine();
-
-                // Setting the name for each socket equal to the index which matches this is explained a bit more in depth above
-                for (int i = 0; i < clientSocketArray.length ; i++) {
-                    if(client == clientSocketArray[i]){
-                        tempName = clientNames[i];
+            List<String> messagesList = new ArrayList<>();
+            long currentTime = System.currentTimeMillis() + 10000; // 1538989906527  // 1538989967167
+            System.out.println(currentTime);
+                do {
+                    // Initializing message as inputClient.nextline();
+                                        message = inputClient.nextLine();
+                        if(!message.contains("***IMAV***")) {
+                            // Setting the name for each socket equal to the index which matches this is explained a bit more in depth above
+                            for (int i = 0; i < clientSocketArray.length; i++) {
+                                if (client == clientSocketArray[i]) {
+                                    tempName = clientNames[i];
+                                }
+                            }
+                            // Calling the method sendAll() we add tempName in front of the message so that we can see who sent the message
+                            sendAll("DATA " + tempName + ": " + message);
+                        }
+                        messagesList.add(message);
+                    for (int i = 0; i < messagesList.size(); i++) {
+                        System.out.println(i + " : " + messagesList.get(i));
                     }
-                }
 
-                // Calling the method sendAll() we add tempName in front of the message so that we can see who sent the message
-                sendAll("DATA " + tempName + ": " + message);
-            }
-            //Loop Will continue running until the message QUIT is typed
-            while (!message.equals("QUIT"));
+                        long newTime = System.currentTimeMillis();
+                        if (newTime >= currentTime) {
+                            if (messagesList.contains("***IMAV***")) {
+                                System.out.println(tempName + " IS ALIVE");
+                                messagesList.clear();
+                            } else {
+                                System.out.println("Closing client: " + tempName + ". No heartbeat received");
+                                messagesList.clear();
+                                try {
 
-            try {
-                // If socket is unequal to null the socket will close and we will print out a closing message
-                if (client!=null) {
-                    System.out.println("Closing down connection...");
-                    client.close();
-                }
-            }
-            catch (IOException ioEx) {
-                System.out.println("Unable to disconnect!");
+
+                                    for (int i = 0; i < clientSocketArray.length; i++) {
+                                        if (client == clientSocketArray[i]) {
+                                            clientSocketArray[i] = null;
+                                            clientNames[i] = null;
+                                        }
+                                    }
+                                    client.close();
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            currentTime = System.currentTimeMillis() + 10000;
+                        }
+                    }
+
+                //Loop Will continue running until the message QUIT is typed
+                while (!message.equals("QUIT"));
+
+                try {
+                    // If socket is unequal to null the socket will close and we will print out a closing message
+                    if (client != null) {
+                        System.out.println("Closing down connection...");
+                        client.close();
+                    }
+                } catch (IOException ioEx) {
+                    System.out.println("Unable to disconnect!");
             }
         }
     }
-
-
 }
 
 

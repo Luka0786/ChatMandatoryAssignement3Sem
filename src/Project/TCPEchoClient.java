@@ -95,7 +95,7 @@ public class TCPEchoClient {
                         try {
                             String IMAVmessage = "***IMAV***";
                             output.println(IMAVmessage);
-                            Thread.sleep(5000);
+                            Thread.sleep(60000);
                         } catch (InterruptedException ieE) {
                             ieE.printStackTrace();
                         }
@@ -106,7 +106,7 @@ public class TCPEchoClient {
 
             // Declaring two Strings
             String response;
-
+            System.out.println("Enter message: ");
             do {
                 // Thread that reads the message written by the client
                 Thread readMessage = new Thread(new Runnable() {
@@ -117,7 +117,7 @@ public class TCPEchoClient {
                         while (true){
                             try {
                                 // The clients input
-                                System.out.println("Enter message: ");
+
 
                                 String message = userEntry.readLine();
 

@@ -51,7 +51,7 @@ public class TCPEchoServer {
                     names += clientNames[i] + " ";}
                 }
 
-                System.out.println(names);
+
                 output.println(names);
                 output.println("J_OK");
 
@@ -68,16 +68,11 @@ public class TCPEchoServer {
                 // Initializing a new HandleClient which takes a socket as a parameter
                 HandleClient handler = new HandleClient(clientSocketArray[counter]);
 
-                List<String> tempListOfNames = new ArrayList<>();
 
-                for (int i = 0; i < clientNames.length; i++) {
 
-                    if (clientNames[i] != null) {
-                        tempListOfNames.add(clientNames[i]);
-                    }
-                }
 
-                handler.sendAll("LIST " + tempListOfNames.toString()
+
+                handler.sendAll("LIST " + getNamesList(clientNames).toString()
                         .replace(",", "")
                         .replace("[", "")
                         .replace("]", ""));
@@ -153,18 +148,14 @@ public class TCPEchoServer {
             String message;
             String tempName = "";
             List<String> messagesList = new ArrayList<>();
-            long currentTime = System.currentTimeMillis() + 10000; // 1538989906527  // 1538989967167
-            System.out.println(currentTime);
+            long currentTime = System.currentTimeMillis() + 120000; // 1538989906527  // 1538989967167
+
                 do {
                     // Initializing message as inputClient.nextline();
-                                        message = inputClient.nextLine();
+                        message = inputClient.nextLine();
                         if(!message.contains("***IMAV***")) {
                             // Setting the name for each socket equal to the index which matches this is explained a bit more in depth above
-                            for (int i = 0; i < clientSocketArray.length; i++) {
-                                if (client == clientSocketArray[i]) {
-                                    tempName = clientNames[i];
-                                }
-                            }
+                            tempName = getName(tempName,client);
                             // Calling the method sendAll() we add tempName in front of the message so that we can see who sent the message
                             sendAll("DATA " + tempName + ": " + message);
                         }
@@ -176,6 +167,11 @@ public class TCPEchoServer {
                         long newTime = System.currentTimeMillis();
                         if (newTime >= currentTime) {
                             if (messagesList.contains("***IMAV***")) {
+
+
+                                tempName = getName(tempName, client);
+
+
                                 System.out.println(tempName + " IS ALIVE");
                                 messagesList.clear();
                             } else {
@@ -196,7 +192,7 @@ public class TCPEchoServer {
                                     e.printStackTrace();
                                 }
                             }
-                            currentTime = System.currentTimeMillis() + 10000;
+                            currentTime = System.currentTimeMillis() + 120000;
                         }
                     }
 
@@ -206,14 +202,52 @@ public class TCPEchoServer {
                 try {
                     // If socket is unequal to null the socket will close and we will print out a closing message
                     if (client != null) {
-                        System.out.println("Closing down connection...");
+
+
+                        for (int i = 0; i < clientSocketArray.length; i++) {
+                            if (client == clientSocketArray[i]) {
+
+                                String quitMessage = clientNames[i] + " Has left the chat";
+                                System.out.println(quitMessage);
+                                sendAll(quitMessage);
+
+                                clientSocketArray[i] = null;
+                                clientNames[i] = null;
+
+
+                                sendAll("LIST " + getNamesList(clientNames).toString()
+                                        .replace(",", "")
+                                        .replace("[", "")
+                                        .replace("]", ""));
+                            }
+                        }
+
                         client.close();
                     }
                 } catch (IOException ioEx) {
                     System.out.println("Unable to disconnect!");
             }
         }
+        public String getName(String name, Socket client) {
+            for (int i = 0; i < clientSocketArray.length; i++) {
+                if (client == clientSocketArray[i]) {
+                    name = clientNames[i];
+                }
+            }
+            return name;
+        }
     }
+
+public static List getNamesList(String[] array){
+        List<String> listOfNames = new ArrayList<>();
+    for (int j = 0; j < array.length; j++) {
+
+        if (array[j] != null) {
+            listOfNames.add(array[j]);
+        }
+    }
+    return listOfNames;
+}
 }
 
 

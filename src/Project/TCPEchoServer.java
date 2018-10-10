@@ -144,51 +144,63 @@ public class TCPEchoServer {
             String message;
             String tempName = "";
             List<String> messagesList = new ArrayList<>();
-            long currentTime = System.currentTimeMillis() + 120000; // 1538989906527  // 1538989967167
+            //Setting newTime equal to current time in milliseconds plus 120000 so that it is 2 minutes ahead
+            long newTime = System.currentTimeMillis() + 120000; // 1538989906527  // 1538989967167
 
                 do {
                     // Initializing message as inputClient.nextline();
                         message = inputClient.nextLine();
                         if(!message.contains("***IMAV***")) {
-                            // Setting the name for each socket equal to the index which matches this is explained a bit more in depth above
+                            // Setting tempname = getName with the parameters tempName and client, getName gets the specific name that corresponds with that client socket
                             tempName = getName(tempName,client);
                             // Calling the method sendAll() we add tempName in front of the message so that we can see who sent the message
                             sendAll("DATA " + tempName + ": " + message);
                         }
+                        //adding the current message to the messagesList
                         messagesList.add(message);
-                    for (int i = 0; i < messagesList.size(); i++) {
+                        // Below fori loop is for visual presentation of the messages sent from the client.
+                        for (int i = 0; i < messagesList.size(); i++) {
                         System.out.println(i + " : " + messagesList.get(i));
-                    }
+                        }
 
-                        long newTime = System.currentTimeMillis();
-                        if (newTime >= currentTime) {
+                        //Creating a long that contains current time in milliseconds
+                        long currentTime = System.currentTimeMillis();
+                        //if currentTime which is the currentTime in milliseconds is equal to the newTime
+                        if (currentTime >= newTime) {
+                            //If the list of messages contains ***IMAV***
                             if (messagesList.contains("***IMAV***")) {
 
-
+                                //tempName = getName(tempName, client) so we get the name that corresponds to the clients socket
                                 tempName = getName(tempName, client);
 
-
+                                //Printing out that the client is ALive for debugging purposes
                                 System.out.println(tempName + " IS ALIVE");
+                                //Clearing the list every time we check so that it wont contain IMAV from before we ran it.
                                 messagesList.clear();
                             } else {
+                                //This happends if the list does not contain ***IMAV***
+                                //We print out that the client is closing with the clients name and explains that no heartbeat was received
                                 System.out.println("Closing client: " + tempName + ". No heartbeat received");
+                                // We then clear the list
                                 messagesList.clear();
                                 try {
 
-
+                                    //We set the clients Socket and name = null so they wont be shown in either of the lists
                                     for (int i = 0; i < clientSocketArray.length; i++) {
                                         if (client == clientSocketArray[i]) {
                                             clientSocketArray[i] = null;
                                             clientNames[i] = null;
                                         }
                                     }
+                                    //We then wrap up by closing the client
                                     client.close();
 
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                             }
-                            currentTime = System.currentTimeMillis() + 120000;
+                            //Making it so another 2 minutes will pass before running this code again
+                            newTime = System.currentTimeMillis() + 120000;
                         }
                     }
 
@@ -203,14 +215,17 @@ public class TCPEchoServer {
                         for (int i = 0; i < clientSocketArray.length; i++) {
                             if (client == clientSocketArray[i]) {
 
+                                //Initializing the quitMessage with the clients name
                                 String quitMessage = clientNames[i] + " Has left the chat";
                                 System.out.println(quitMessage);
+                                //sends quit message to all active clients
                                 sendAll(quitMessage);
 
+                                //Setting the clients socket and name = null, so when we print out those lists the null value will not be shown
                                 clientSocketArray[i] = null;
                                 clientNames[i] = null;
 
-
+                                //Send updated list of names which does not contain the client that was just removed
                                 sendAll("LIST " + getNamesList(clientNames).toString()
                                         .replace(",", "")
                                         .replace("[", "")
@@ -224,6 +239,7 @@ public class TCPEchoServer {
                     System.out.println("Unable to disconnect!");
             }
         }
+        //Method that returns the name that corresponds to the speficic socket
         public String getName(String name, Socket client) {
             for (int i = 0; i < clientSocketArray.length; i++) {
                 if (client == clientSocketArray[i]) {
@@ -234,6 +250,8 @@ public class TCPEchoServer {
         }
     }
 
+
+    //method that returns a list of names, this list contains all names that arent null
 public static List getNamesList(String[] array){
         List<String> listOfNames = new ArrayList<>();
     for (int j = 0; j < array.length; j++) {

@@ -150,13 +150,18 @@ public class TCPEchoServer {
                 do {
                     // Initializing message as inputClient.nextline();
                         message = inputClient.nextLine();
-                        if(!message.contains("***IMAV***")) {
+                        if(!message.contains("***IMAV***") && message.startsWith("DATA ")){
                             // Setting tempname = getName with the parameters tempName and client, getName gets the specific name that corresponds with that client socket
                             tempName = getName(tempName,client);
+
+                            String finalMessage = message.replace("DATA ", "");
                             // Calling the method sendAll() we add tempName in front of the message so that we can see who sent the message
-                            sendAll("DATA " + tempName + ": " + message);
+                            sendAll(tempName + ": " + finalMessage);
                         }else if(message.contains("***IMAV***")){
                             messagesList.add(message);}
+                            else if(!message.contains("QUIT")){
+                            outputClient.println("J_ER BAD COMMAND");
+                        }
                         //adding the current message to the messagesList
 
 

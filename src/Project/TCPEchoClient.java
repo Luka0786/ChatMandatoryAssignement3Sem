@@ -19,13 +19,17 @@ public class TCPEchoClient {
     private static String name;
     private static String hostName;
 
+
     public static void main(String[] args)  {
 
         try{
             // Method call
 
             connectToServer();
+            System.out.println();
             // Setting the InetAddress
+
+
             host = InetAddress.getByName(hostName);
 
 

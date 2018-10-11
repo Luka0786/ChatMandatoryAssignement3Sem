@@ -155,14 +155,17 @@ public class TCPEchoServer {
                             tempName = getName(tempName,client);
                             // Calling the method sendAll() we add tempName in front of the message so that we can see who sent the message
                             sendAll("DATA " + tempName + ": " + message);
-                        }
+                        }else if(message.contains("***IMAV***")){
+                            messagesList.add(message);}
                         //adding the current message to the messagesList
-                        messagesList.add(message);
+
+
                         // Below fori loop is for visual presentation of the messages sent from the client.
-                        for (int i = 0; i < messagesList.size(); i++) {
+                    /*
+                    for (int i = 0; i < messagesList.size(); i++) {
                         System.out.println(i + " : " + messagesList.get(i));
                         }
-
+                    */
                         //Creating a long that contains current time in milliseconds
                         long currentTime = System.currentTimeMillis();
                         //if currentTime which is the currentTime in milliseconds is equal to the newTime

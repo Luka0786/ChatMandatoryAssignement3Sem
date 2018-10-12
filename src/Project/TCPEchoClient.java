@@ -1,6 +1,5 @@
 package Project;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,8 +7,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.*;
-
-
 
 public class TCPEchoClient {
     // Attributes
@@ -19,23 +16,18 @@ public class TCPEchoClient {
     private static String name;
     private static String hostName;
 
-
     public static void main(String[] args)  {
-
-        try{
+        try {
             // Method call
-
             connectToServer();
-            System.out.println();
+
             // Setting the InetAddress
-
-
             host = InetAddress.getByName(hostName);
 
-
-        }catch (IOException uhE) {
+        }
+        catch (IOException uhE) {
             // Printing the error message
-            System.out.println("Client not accepted." + uhE.getMessage());
+            System.out.println("J_ER CLIENT NOT ACCEPTED");
 
             // Closing the system after error occurs
             System.exit(1);
@@ -47,11 +39,10 @@ public class TCPEchoClient {
 
     // Method that makes the client access the server
     private static void accessServer() {
-        // Initializing new socket
-        Socket socket = null;
+        // Declaring new socket
+        Socket socket;
 
         try {
-
             // The socket equals the InetAdress and Port number
             socket = new Socket(host,PORT);
 
@@ -71,26 +62,20 @@ public class TCPEchoClient {
             String names = input.readLine();
             String[] tempArray = names.split("[\\s]");
 
-
             List<String> tempNames = new ArrayList(Arrays.asList(tempArray));
 
-            for (int i = 0; i < tempNames.size(); i++) {
-                System.out.println(tempArray[i]);
-            }
-
+            // Only if our tempNames contains the name input from the client. The client must then choose another name
             while (tempNames.contains(name)){
                 System.out.println("Duplicate name please try again: ");
                 Scanner scanner = new Scanner(System.in);
 
-               name = scanner.nextLine();
+                name = scanner.nextLine();
             }
 
             // Sending the clients name to the sockets OutputStream
             output.println(name);
 
-            // IMAV Thread
-            // LAV DENNE OM TIL NORMAL METODE. IKKE BEHOV FOR EN SLEEPER MERE. VI DELAYER DEN MED VORES IF STATEMENT (DOTIME) og (LOCALTIME).
-            // HVER CLIENT HAR EN HVER
+            // Sending a message in a new thread every 60 second
             Thread IMAV = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -113,39 +98,29 @@ public class TCPEchoClient {
             do {
                 // Thread that reads the message written by the client
                 Thread readMessage = new Thread(new Runnable() {
-
                     @Override
                     public void run() {
 
                         while (true){
                             try {
                                 // The clients input
-
-
                                 String message = userEntry.readLine();
 
-
-                               while(message.length() > 250){
-                                   System.out.println("Messages can only be 250 characters");
-
-                                   message = userEntry.readLine();
-                               }
+                                while(message.length() > 250){
+                                    System.out.println("Messages can only be 250 characters");
+                                    message = userEntry.readLine();
+                                }
                                 // Sending the input to the sockets OutputStream
                                 output.println(message);
-
-
-
 
                                 // If the client type QUIT the system closes
                                 if (message.equals("QUIT")) {
                                     System.exit(1);
                                 }
-
-
                             }
                             // Catching the IOExeption and printing the error code
                             catch (IOException e) {
-                                e.printStackTrace();
+                                System.out.println("J_ER INPUT/OUTPUT ERROR");
                             }
                         }
                     }
@@ -153,21 +128,18 @@ public class TCPEchoClient {
                 // Starting the Thread
                 readMessage.start();
 
-
                 // Setting the response equals the sockets InputStreams readLine method
                 response = input.readLine();
 
                 // Printing out the response (J_OK)
                 System.out.println(response);
-
             }
-
             // Infinite loop
             while (true);
         }
         // Catching the IOExeption and printing the error code
         catch (IOException ioE){
-            ioE.printStackTrace();
+            System.out.println("J_ER INPUT/OUTPUT ERROR");
         }
     }
 
@@ -197,8 +169,6 @@ public class TCPEchoClient {
             name = temp.nextLine();
         }
 
-
-
         // The InetAdress is equal the second index of the String array
         hostName = parts[2];
 
@@ -206,5 +176,3 @@ public class TCPEchoClient {
         PORT = Integer.parseInt(parts[3]);
     }
 }
-
-

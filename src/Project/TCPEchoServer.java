@@ -233,7 +233,7 @@ public class TCPEchoServer {
     }
 
     //method that returns a list of names, this list contains all names that arent null
-    public static List getNamesList(String[] array){
+    private static List getNamesList(String[] array){
         List<String> listOfNames = new ArrayList<>();
         for (int j = 0; j < array.length; j++) {
 

@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f8b5f267-27b1-4f69-ae5c-cf39a0decba2" name="Default" comment="Heartbeat done?">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ChatMandatory/Project/TCPEchoClient$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ChatMandatory/Project/TCPEchoClient$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ChatMandatory/Project/TCPEchoClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ChatMandatory/Project/TCPEchoClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ChatMandatory/Project/TCPEchoServer$HandleClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ChatMandatory/Project/TCPEchoServer$HandleClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/ChatMandatory/Project/TCPEchoServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ChatMandatory/Project/TCPEchoServer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Project/TCPEchoServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Project/TCPEchoServer.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -98,7 +93,7 @@
         <entry file="file://$PROJECT_DIR$/src/Project/TCPEchoServer.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="304">
-              <caret line="134" column="20" selection-start-line="134" selection-start-column="20" selection-end-line="134" selection-end-column="20" />
+              <caret line="134" selection-start-line="134" selection-end-line="134" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -156,7 +151,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds">
     <option name="x" value="-7" />
     <option name="width" value="974" />
     <option name="height" value="1047" />
@@ -196,7 +191,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539351181680" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539353419869" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
@@ -1192,17 +1187,24 @@
       <option name="project" value="LOCAL" />
       <updated>1539350779385</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Heartbeat done?">
+      <created>1539351332559</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1539351332559</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53204000" />
+    <option name="totallyTimeSpent" value="53820000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-7" y="0" width="974" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.123667374" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25382933" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -1211,7 +1213,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.24702059" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.24945295" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3266385" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -1346,7 +1348,7 @@
     <entry file="file://$PROJECT_DIR$/src/Project/TCPEchoServer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
-          <caret line="134" column="20" selection-start-line="134" selection-start-column="20" selection-end-line="134" selection-end-column="20" />
+          <caret line="134" selection-start-line="134" selection-end-line="134" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

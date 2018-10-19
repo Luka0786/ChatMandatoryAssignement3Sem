@@ -131,12 +131,12 @@ public class TCPEchoServer {
                 // Initializing message as inputClient.nextline();
                 message = inputClient.nextLine();
                 //making it so only the current client can use his own username like so Kasper cant write messages for Lukas
-                if(!message.contains("***IMAV***") && message.startsWith("DATA " + tempName + ":")){
+                if(!message.contains("IMAV") && message.startsWith("DATA " + tempName + ":")){
 
                     String finalMessage = message.replace("DATA ", "");
                     // Calling the method sendAll() we add tempName in front of the message so that we can see who sent the message
                     sendAll(finalMessage);
-                }else if(message.contains("***IMAV***")){
+                }else if(message.contains("IMAV")){
                     // adding the current message to the messagesList
                     messagesList.add(message);}
                 else if(!message.contains("QUIT")){
@@ -155,7 +155,7 @@ public class TCPEchoServer {
                 //if currentTime which is the currentTime in milliseconds is equal to the newTime
                 if (currentTime >= newTime) {
                     //If the list of messages contains ***IMAV***
-                    if (messagesList.contains("***IMAV***")) {
+                    if (messagesList.contains("IMAV")) {
                         //tempName = getName(tempName, client) so we get the name that corresponds to the clients socket
                         tempName = getName(tempName, client);
 

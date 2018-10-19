@@ -81,7 +81,7 @@ public class TCPEchoClient {
                 public void run() {
                     while (true) {
                         try {
-                            String IMAVmessage = "***IMAV***";
+                            String IMAVmessage = "IMAV";
                             output.println(IMAVmessage);
                             Thread.sleep(60000);
                         } catch (InterruptedException ieE) {
@@ -161,7 +161,7 @@ public class TCPEchoClient {
         // The name is equal the first index of the String array
         name = parts[1];
 
-        while (name.length() > 12 || !name.matches("[a-åA-Å0-9_-]+")){
+        while (name.length() > 12 || !name.matches("[a-åA-Å0-9_æøÆØ-]+")){
             System.out.println("Invalid name. Can only contain 12 characters, numbers and the signs _ and -");
             System.out.println("Please try again: ");
             Scanner temp = new Scanner(System.in);
